@@ -11,7 +11,7 @@ export const ReportData = ({ excelData }) => {
               <tr key={index}>
                 {items.map((subItems, sIndex) => (
                   <>
-                    {index == 0 ? (
+                    {index === 0 ? (
                       <th scope="col">{subItems}</th>
                     ) : (
                       <td
