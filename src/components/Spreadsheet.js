@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import * as XLSX from "xlsx";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import ReportModal from "./ReportModal";
 import Button from "react-bootstrap/Button";
@@ -10,22 +10,22 @@ import Spinner from "react-bootstrap/Spinner";
 
 function Spreadsheet() {
   // on change
-  const notify = (e) => {
-    e.preventDefault();
-    toast.success("File Submitted !", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  };
+  // const notify = (e) => {
+  //   e.preventDefault();
+  //   toast.success("File Submitted !", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //   });
+  // };
   const [file, setFile] = useState();
   const [file2, setFile2] = useState();
   // const [excelFile, setExcelFile] = useState(null);
-  const [excelFileError, setExcelFileError] = useState(null);
+  const [excelFileError] = useState(null);
   const [show, setShow] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [excelData, setExcelData] = useState(null);
 
-  const [html, setHtml] = useState("");
-  const tbl = useRef(null);
+  //const [html, setHtml] = useState("");
+  //const tbl = useRef(null);
 
   const handleClose = () => setShow(false);
 
