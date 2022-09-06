@@ -7,6 +7,7 @@ import ReportModal from "./ReportModal";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
+import MessageDetail from "./MessageDetail";
 
 function Spreadsheet() {
   // on change
@@ -23,6 +24,9 @@ function Spreadsheet() {
   const [show, setShow] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [excelData, setExcelData] = useState(null);
+
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   //const [html, setHtml] = useState("");
   //const tbl = useRef(null);
@@ -54,23 +58,40 @@ function Spreadsheet() {
           responseType: "arraybuffer",
         };
 
-        await axios.post(API_URL, formData, config).then((response) => {
-          const workbook = XLSX.read(response.data, { type: "buffer" });
-          const worksheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[worksheetName];
-          const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        await axios
+          .post(API_URL, formData, config)
+          .then((response) => {
+            setErrorMsg(null);
+            setShowError(false);
 
-          // const dataHtml = XLSX.utils.sheet_to_html(worksheet); // generate HTML
-          // setHtml(dataHtml); // update state
+            const workbook = XLSX.read(response.data, { type: "buffer" });
+            const worksheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[worksheetName];
+            const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          setExcelData(data);
-          setShowLoader(false);
-          setShow(true);
-          console.log("Done");
-        });
+            // const dataHtml = XLSX.utils.sheet_to_html(worksheet); // generate HTML
+            // setHtml(dataHtml); // update state
+
+            setExcelData(data);
+            setShowLoader(false);
+            setShow(true);
+            console.log("Done");
+          })
+          .catch((err) => {
+            setShowLoader(false);
+            var errorMsg = String.fromCharCode(
+              ...new Uint8Array(err.response.data)
+            );
+            console.log(err);
+            console.log(errorMsg);
+
+            setErrorMsg(errorMsg);
+            setShowError(true);
+          });
       }
     } catch (error) {
       setShowLoader(false);
+      console.log(error);
       alert(error);
     }
   };
@@ -79,6 +100,11 @@ function Spreadsheet() {
     <div className="container pt-5 mt-3">
       <div className="row">
         <div className="col-12">
+          <MessageDetail
+            showError={showError}
+            msg={errorMsg}
+            className="mb-2"
+          />
           <Card bg="primary" text="white">
             <Card.Header>
               <h4>Select Google Spreadsheet to Compare</h4>
