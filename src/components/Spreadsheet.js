@@ -46,7 +46,7 @@ function Spreadsheet() {
         const formData = new FormData();
         formData.append("file1", file);
         formData.append("file2", file2);
-        const API_URL = "/upload-file";
+        const API_URL = "https://gssservice.herokuapp.com/upload-file";
         const config = {
           headers: {
             "content-type": "multipart/form-data",
