@@ -2,21 +2,19 @@
 
 name: Deploy React App
 
-# Controls when the workflow will run
+# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ master ]
- 
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-      inputs:
-        job_name:
-          description: 'Run Job'
-          required: true
-          default: 'build_deploy'
-      
+    inputs:
+      job_name:
+        description: 'Run Job'
+        required: true
+        default: 'build_deploy'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,7 +26,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
       - name: Npm Install Packages
@@ -37,14 +35,12 @@ jobs:
       - name: Test & Code Coverage
         run: npm test -- --coverage
         
-      - name: Upload Code Coverage 
+      - name: Upload Code Coverage
         uses: codecov/codecov-action@v1
         with:
-          token: ${( secrets.CODECOV_TOKEN )}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          
       - name: Build Package
         env:
           CI: false
-           run:npm run build
-       
-
-     
+        run: npm run build
